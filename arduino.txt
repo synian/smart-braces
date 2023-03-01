@@ -1,0 +1,60 @@
+int fsrReading;
+int fsrReading2;
+
+int fsrVoltage;  the analog reading converted to voltage
+int fsrVoltage2;  the analog reading converted to voltage
+unsigned long fsrResistance;  The voltage converted to resistance, can be very big so make long
+unsigned long fsrConductance;
+long fsrForce;
+unsigned long fsrResistance2;  The voltage converted to resistance, can be very big so make long
+unsigned long fsrConductance2;
+long fsrForce2;
+
+void setup(void) {
+Serial.begin(9600); 
+}
+void loop(void) {
+fsrReading = analogRead(2);connected to a2
+fsrReading2 = analogRead(3);connected to a3
+  
+ Analog voltage readings range from approximately 0 to 1023, mapped to 0V to 3.7V(= 3700mV)
+fsrVoltage = map(fsrReading, 0, 1023, 0, 3700);
+ The voltage = Vcc  R  (R + FSR) where R = 1K and Vcc = 3.7V
+ FSR = ((Vcc - V)  R)  V 
+fsrResistance = 3700 - fsrVoltage;  fsrVoltage is in millivolts so 5V = 5000mV
+fsrResistance = 1000;  1K resistor
+fsrResistance = fsrVoltage;
+fsrConductance = 1000000;  we measure in micromhos so
+fsrConductance = fsrResistance;
+
+if (fsrConductance = 100) {
+fsrForce = fsrConductance  0.8;
+
+Serial.write(fsrForce);
+} else {
+fsrForce = fsrConductance - 100;
+fsrForce = 0.3;
+Serial.write(fsrForce);
+}
+
+fsrVoltage2 = map(fsrReading2, 0, 1023, 0, 3700);
+ The voltage = Vcc  R  (R + FSR) where R = 1K and Vcc = 3.7V
+ FSR = ((Vcc - V)  R)  V 
+fsrResistance2 = 3700 - fsrVoltage2;  fsrVoltage is in millivolts so 5V = 5000mV
+fsrResistance2 = 1000;  1K resistor
+fsrResistance2 = fsrVoltage2;
+fsrConductance2 = 1000000;  we measure in micromhos so
+fsrConductance2 = fsrResistance2;
+
+if (fsrConductance2 = 100) {
+fsrForce2 = fsrConductance2  0.8;
+
+Serial.write(fsrForce2);
+} else {
+fsrForce2 = fsrConductance2 - 100;
+fsrForce2 = 0.3;
+
+Serial.write(fsrForce2);
+}
+delay(1000);
+}
